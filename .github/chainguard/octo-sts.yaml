@@ -1,0 +1,5 @@
+issuer: https://token.actions.githubusercontent.com
+subject_pattern: "repo:joedborg/octo-sts-repository-custom-properties:.*"
+permissions:
+  metadata: read
+  repository_custom_properties: write

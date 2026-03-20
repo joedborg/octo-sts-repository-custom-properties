@@ -1,0 +1,32 @@
+name: Testing custom properties
+
+on:
+  workflow_dispatch:
+
+jobs:
+  custom-property-check-write:
+    runs-on: ubuntu-latest
+    permissions: write-all
+    steps:
+      - name: Get Octo-STS Token
+        uses: octo-sts/action@f603d3be9d8dd9871a265776e625a27b00effe05 #v1.1.1
+        id: octo-sts
+        with:
+          scope: joedborg/octo-sts-repository-custom-properties
+          identity: custom-properties-write
+
+      - name: Set custom property
+        env:
+          ORG: joedborg
+          REPO: octo-sts-repository-custom-properties
+          GH_TOKEN: ${{ steps.octo-sts.outputs.token }}
+        run: |
+          gh api --method PATCH \
+          -H "Accept: application/vnd.github+json" \
+          -H "X-GitHub-Api-Version: 2022-11-28" \
+          -H "Authorization: Bearer ${GH_TOKEN}" \
+          -i \
+          /orgs/${ORG}/properties/values \
+          -f "repository_names[]=${REPO}" \
+          -f "properties[][property_name]=test-property" \
+          -f "properties[][value]=test-value"
